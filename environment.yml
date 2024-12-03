@@ -1,0 +1,11 @@
+name: UCL-sketch
+channels:
+  - pytorch
+  - nvidia
+dependencies:
+  - python >= 3.8
+  - pytorch >= 2.0
+  - pip:
+    - numpy
+    - tqdm
+    - matplotlib

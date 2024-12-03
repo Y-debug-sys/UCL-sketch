@@ -1,0 +1,23 @@
+sketch:
+  target: UCL_sketch.ucl_sketch.UCLSketch
+  params:
+    slot_num: 1500
+    width: 1024
+    depth: 4
+    bf_hash: 8
+    bf_width: 500000
+    KEY_T_SIZE: 13
+    decode_mode: 'ML'
+
+model:
+  target: Utils.common.Model_Args
+  params:
+    n_extra_layers: 0
+    d_model: 128
+    dropout: 0.
+    share_dim: 1024
+    batch_size: 32
+    num_workers: 0
+    learning_rate: 0.001
+    train_epochs: 300
+    patience: 30
