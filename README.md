@@ -35,7 +35,7 @@ To overcomethese limitations, the study introduces **UCL-sketch** (**U**nsupervi
 
 This repository contains:
 
-* 🪐 A simple PyTorch [implementation](models.py) of UCL-sketch.
+* 🪐 A simple PyTorch [implementation](https://github.com/Y-debug-sys/UCL-sketch/tree/master/UCL_sketch) of UCL-sketch.
 * ⚡️ Pre-processed 13-byte long 5-tuple network packet data slices.
 * 💥 A self-contained [jupyter notebook](http://colab.research.google.com/github/facebookresearch/DiT/blob/main/run_DiT.ipynb) for running and evaluating all sketching algorithms: *CM-sketch*, *C-sketch*, *Ideally Learned CM-sketch*, *Ideally Learned C-sketch*, *Univmon*, *Elastic Sketch*, *NitroSketch*, *SeqSketch* and our *UCL-sketch* for sure.
 * 🛸 Other useful functions and documents, such as metrics like Weighted Mean
