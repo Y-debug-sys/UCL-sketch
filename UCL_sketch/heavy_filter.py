@@ -14,12 +14,12 @@ class slot:
         self.negative_counter = 0
 
     @classmethod
-    def from_key(cls, key):
-        return cls(key)
+    def from_key(cls, key, key_size=8):
+        return cls(key, key_size=key_size)
 
     @classmethod
-    def default(cls):
-        return cls(None)
+    def default(cls, key_size=8):
+        return cls(None, key_size=key_size)
 
     def get_memory_usage(self):
         return 2 * 4 + self.key_size
@@ -30,7 +30,7 @@ class heavyFilter:
     def __init__(self, slot_num, KEY_T_SIZE=13):
         self.key_size = KEY_T_SIZE
         self.size = calNextPrime(slot_num)
-        self.slots = [slot.default() for _ in range(self.size)]
+        self.slots = [slot.default(key_size=KEY_T_SIZE) for _ in range(self.size)]
         self.h, self.s, self.n = [GenHashSeed(i) for i in range(3)]
 
     def insert(self, temp_key, val=1):
@@ -69,4 +69,4 @@ class heavyFilter:
         return 0
     
     def get_memory_usage(self):
-        return self.size * slot.default().get_memory_usage()
+        return self.size * slot.default(key_size=self.key_size).get_memory_usage()
