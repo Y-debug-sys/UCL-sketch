@@ -81,7 +81,7 @@ if __name__ == "__main__":
         size, traces = readTraces(args.data_path, args.data, config['sketch']['params']['KEY_T_SIZE'])
     elif args.skewness:
         assert (args.skewness and args.data=='synthetic'), 'Synthetic ?'
-        size, traces = readTraces(args.data_path, args.data, config['sketch']['params']['KEY_T_SIZE'])
+        size, traces = readTraces(args.data_path, args.data, config['sketch']['params']['KEY_T_SIZE'], skewness=args.skewness)
 
     if size > args.break_number:
         traces = traces[:args.break_number]
