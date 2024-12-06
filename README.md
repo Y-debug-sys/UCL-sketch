@@ -20,7 +20,7 @@
 
 > **Learning-based Sketches for Frequency Estimation in Data Streams without Ground Truth**\
 > Authors: [Xinyu Yuan](https://y-debug-sys.github.io/), [Yan Qiao](https://faculty.hfut.edu.cn/qiaoyan/en/index.htm)*, [Meng Li](https://ubiplab.github.io/MengLi_CV.github.io/) et al.\
-> Paper: https://arxiv.org/abs/2410.15716
+> Paper: http://arxiv.org/abs/2412.03611
 
 ## About
 This work addresses the challenge of frequency estimation in unending data streams, which is vital across domains such as networking, social media, and finance. Traditional sketch-based approaches, using compact counters and hash functions, are computationally efficient but often sacrifice accuracy. Recent efforts to enhance sketches with deep learning have shown promise in improving performance but face limitations: reliance on labeled data, frequent retraining requirements, and high time and space costs in streaming scenarios. 
@@ -84,7 +84,7 @@ If you use this codebase, or otherwise find our work valuable, please cite UCL-s
 @article{learning2024yuan,
   title={Learning-based Sketches for Frequency Estimation in Data Streams without Ground Truth},
   author={Yuan, Xinyu and Qiao, Yan and Li, Meng and Wei, Zhenchun and Feng, Cuiying},
-  journal={arXiv preprint arXiv:2410.15716},
+  journal={arXiv preprint arXiv:2412.03611},
   year={2024}
 }
 ```
