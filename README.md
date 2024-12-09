@@ -81,7 +81,7 @@ The implementation of baselines in this codebase mainly borrows from a C++ repo 
 
 If you use this codebase, or otherwise find our work valuable, please cite UCL-sketch:
 ```
-@article{learning2024yuan,
+@article{yuan2024learning,
   title={Learning-based Sketches for Frequency Estimation in Data Streams without Ground Truth},
   author={Yuan, Xinyu and Qiao, Yan and Li, Meng and Wei, Zhenchun and Feng, Cuiying},
   journal={arXiv preprint arXiv:2412.03611},
