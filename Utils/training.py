@@ -175,6 +175,8 @@ class learningSolver(Exp_Basic):
         test_loader = self._get_data(sketchShots)
         self.model.eval()
         preds = []
+
+        rec_ys = []
         
         with torch.no_grad():
             for i, batch_x in enumerate(test_loader):
@@ -184,7 +186,9 @@ class learningSolver(Exp_Basic):
 
                 batch_x = batch_x.reshape(batch_x.shape[0], -1)
                 rec_y = self.model(batch_x) * scale
+                rec_ys.append(rec_y)
                     
+        result = torch.cat(rec_ys, dim=0)
         # result save
         folder_path = './results/'
         if not os.path.exists(folder_path):
@@ -194,4 +198,4 @@ class learningSolver(Exp_Basic):
             preds = np.concatenate(preds, axis = 0)
             np.save(folder_path + 'pred.npy', preds)
 
-        return rec_y.detach().cpu().numpy()
+        return result.detach().cpu().numpy()
