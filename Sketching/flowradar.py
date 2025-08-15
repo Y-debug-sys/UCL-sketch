@@ -28,6 +28,7 @@ class FlowRadar:
         count_table_hash, 
         KEY_T_SIZE=8
     ):
+        self.est = {}
         self.num_bitmap = calNextPrime(flow_filter_size)
         self.num_bit_hash = flow_filter_hash
         self.num_count_table = calNextPrime(count_table_size)
@@ -57,13 +58,24 @@ class FlowRadar:
                 self.count_table[index].flowXOR = bitwise_xor_bytes(self.count_table[index].flowXOR, flowkey) \
                 if self.count_table[index].flowXOR else flowkey
             self.count_table[index].packet_count += val
+
+    def CM_decode(self, flowkey):
+        results = []
+        for i in range(self.num_count_hash):
+            index = self.hash(flowkey, i)
+            results.append(self.count_table[index].packet_count)
+
+        return min(results)
     
     def decode(self):
+        if self.est != {}:
+            return
+        
         est = {}
         count_table_set = set(self.count_table)
 
         while count_table_set:
-            print('cycle')
+            # print('cycle')
             index = self.count_table.index(min(count_table_set, key=lambda x: x.flow_count))
             value = self.count_table[index].flow_count
             if value > 1:
@@ -84,10 +96,23 @@ class FlowRadar:
 
             est[flowkey] = size
 
-        return est
+        self.est = est
 
     def get_memory_usage(self):
         return (sum(map(lambda x: x.flow_count + x.packet_count, self.count_table))
                 + self.count_table[0].get_memory_usage() * self.num_count_table
                 + self.flow_filter.get_memory_usage())
+    
+    def query(self, key):
+        self.decode()
+        exist_or_not = self.flow_filter.getbit(key)
 
+        if exist_or_not:
+            try:
+                ans = self.est[key]
+            except:
+                ans = self.CM_decode(key)
+        else:
+            ans = 0
+
+        return ans
