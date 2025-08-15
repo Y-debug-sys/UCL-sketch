@@ -4,7 +4,7 @@ from Utils.common import calNextPrime
 from Sketching.hash_function import AwareHash, GenHashSeed
 
 from scipy.sparse import csr_matrix
-from scipy.sparse.linalg import lsqr
+from scipy.sparse.linalg import lsmr
 
 from Sketching.bloom_filter import BloomFilter
 
@@ -77,7 +77,7 @@ class PRSketch:
         N = len(self.flowKeys)
 
         A, b = self.return_cs_components(M, N)
-        x, i, *_ = lsqr(A, b)
+        x, i, *_ = lsmr(A, b)
         x[x<1] = 1
         x = np.ceil(np.abs(x)).astype(np.int32)
 
@@ -99,9 +99,9 @@ class PRSketch:
         return ans
     
     def get_memory_usage(self):
-        # bf_size = self.bf.get_memory_usage()
+        bf_size = self.bf.get_memory_usage()
         sketch_size = self.sketch.get_memory_usage()        
-        return sketch_size
+        return sketch_size + bf_size
     
     def test_linear(self, ground_truth):
 
