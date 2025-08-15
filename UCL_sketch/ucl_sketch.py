@@ -91,11 +91,11 @@ class UCLSketch:
             A, b, _ = self.return_cs_components(M, N)
             omp = OrthogonalMatchingPursuit()
             x = omp.fit(A.toarray(), b).coef_
-            x[x<1] = 1
+            x[x<0] = 0
         elif self.mode=='LSQR':
             A, b, _ = self.return_cs_components(M, N)
             x, *_ = lsqr(A, b)
-            x[x<1] = 1
+            x[x<0] = 0
 
         for i, key in enumerate(keys):
             self.cmResult[key] = x[i]
