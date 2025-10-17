@@ -71,7 +71,7 @@ Moreover, you can also conduct experiments on synthetic zipfian datasets by runn
 python main.py --config_path ./configs/{your_config_name}.yaml --skewness {your_skew_value} --ckpt ./checkpoints --data synthetic
 ```
 
-Regarding comparisons with baselines and evaluation (AAE, ARE, WMRD etc.), see our [`Jupyter demo`](run_sketches.ipynb) for details.
+Regarding comparisons with baselines and evaluation (AAE, ARE, WMRD etc.), see our [`Jupyter demo`](experiment_demo.ipynb) for details.
 
 ## Acknowledgments
 
