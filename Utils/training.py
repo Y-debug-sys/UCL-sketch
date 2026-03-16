@@ -17,10 +17,23 @@ warnings.filterwarnings('ignore')
 
 class learningSolver(Exp_Basic):
     def __init__(self, args, out_dim):
+        """
+        Initialize the learning solver
+        
+        Args:
+            args: Model arguments containing hyperparameters and configuration
+            out_dim: Output dimension of the network (number of items to estimate)
+        """
         self.out_dim = out_dim
         super(learningSolver, self).__init__(args)
     
     def _build_model(self):
+        """
+        Build the neural network model based on the ablation setting
+        
+        Returns:
+            The initialized neural network model (either inverseNet or inverseNet_ablation)
+        """
         if self.args.ablation != 1:
             model = inverseNet(
                 self.args.e_layers,
@@ -47,16 +60,29 @@ class learningSolver(Exp_Basic):
         return model
 
     def _get_data(self, data, A=None):
+        """
+        Prepare data loader for training/testing
+        
+        Args:
+            data: Input sketch data to be loaded
+            A: Phi matrix for constraints (optional)
+            
+        Returns:
+            DataLoader instance for the sketch data
+        """
         args = self.args
 
         if A is not None:
+            # Store the phi matrix on the device
             self.A = torch.from_numpy(A).float().to(self.device)
         
         if data.shape[0] == 1:
+            # Don't drop last batch if there's only one sample
             drop_last = False
         else:
             drop_last = True
         
+        # Create dataset and dataloader
         data_set = sketchDataset(data)
         data_loader = DataLoader(
             data_set,
@@ -69,30 +95,73 @@ class learningSolver(Exp_Basic):
         return data_loader
 
     def _select_optimizer(self):
+        """
+        Select the Adam optimizer for training
+        
+        Returns:
+            Adam optimizer configured with the learning rate from args
+        """
         return optim.Adam(filter(lambda p: p.requires_grad, self.model.parameters()), lr=self.args.learning_rate)
     
     def _select_criterion(self):
+        """
+        Select the loss function (Mean Squared Error)
+        
+        Returns:
+            MSE loss function
+        """
         criterion =  nn.MSELoss()
         return criterion
     
     def intance_norm(self, inp):
+        """
+        Perform instance normalization on the input
+        
+        Args:
+            inp: Input tensor to normalize
+            
+        Returns:
+            Normalized tensor and the scale factor used
+        """
         scale = torch.min(torch.max(inp, dim=-1, keepdim=True)[0], dim=1, keepdim=True)[0]
         return inp / scale, scale
 
     def transform(self, inp, ind, add_total=100):
-        inp = torch.clamp_min(inp, 1.)
-        len = inp.shape[-1]
-        origin = inp[:, ind]
-        zeros = torch.zeros_like(inp)
+        """
+        Transform the input by adding noise and redistributing probabilities
+        
+        Args:
+            inp: Input tensor to transform
+            ind: Indices of important elements
+            add_total: Total amount to add to the distribution
+            
+        Returns:
+            Transformed input with added noise
+        """
+        inp = torch.clamp_min(inp, 1.)  # Clamp minimum value to 1
+        len = inp.shape[-1]  # Length of the last dimension
+        origin = inp[:, ind]  # Extract values at specified indices
+        zeros = torch.zeros_like(inp)  # Create a tensor of zeros
+        # Randomly select some indices to add noise to
         add_indices = np.random.choice(
             np.ones(len), (int)(len * 0.05), replace=False
         )
+        # Redistribute probability mass
         origin_prob = origin / torch.sum(origin, dim=-1, keepdim=True)
         zeros[:, ind] = origin_prob * add_total
         zeros[:, add_indices] = zeros[:, add_indices] + 1
         return inp + zeros
 
     def train(self, sketchShots, phiMatrix, index, weight=0.1):
+        """
+        Train the neural network model using the provided data
+        
+        Args:
+            sketchShots: Sampled sketch states for training
+            phiMatrix: Constraint matrix (phi matrix) for the system
+            index: Indices of important elements in the sketch
+            weight: Weight for the regularization term
+        """
         index = torch.from_numpy(np.array(index)).long().to(self.device)
         train_loader = self._get_data(sketchShots, phiMatrix)
 
@@ -172,6 +241,16 @@ class learningSolver(Exp_Basic):
 
 
     def test(self, sketchShots, save_pred=False):
+        """
+        Test the trained model on new data
+        
+        Args:
+            sketchShots: Sketch states to test on
+            save_pred: Whether to save predictions to disk
+            
+        Returns:
+            Predicted frequency values as numpy array
+        """
         test_loader = self._get_data(sketchShots)
         self.model.eval()
         preds = []
@@ -181,15 +260,17 @@ class learningSolver(Exp_Basic):
         with torch.no_grad():
             for i, batch_x in enumerate(test_loader):
                 batch_x = batch_x.to(self.device)
+                # Normalize the input batch
                 scale = torch.min(torch.max(batch_x, dim=-1)[0], dim=-1)[0]
                 batch_x /= scale
 
                 batch_x = batch_x.reshape(batch_x.shape[0], -1)
+                # Forward pass through the model
                 rec_y = self.model(batch_x) * scale
                 rec_ys.append(rec_y)
                     
         result = torch.cat(rec_ys, dim=0)
-        # result save
+        # Save results
         folder_path = './results/'
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)

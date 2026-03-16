@@ -1,4 +1,4 @@
-# Unsupervised Compressive Learning Sketch (UCL-sketch)<br><sub>Official PyTorch Implementation</sub>
+# Learning-based Sketches for Frequency Estimation in Data Streams without Ground Truth<br><sub>Official PyTorch Implementation</sub>
 
 <div align="center">
 <p>
@@ -6,6 +6,7 @@
 [![](https://img.shields.io/github/stars/Y-debug-sys/UCL-sketch.svg)](https://github.com/Y-debug-sys/UCL-sketch/stargazers)
 [![](https://img.shields.io/github/forks/Y-debug-sys/UCL-sketch.svg)](https://github.com/Y-debug-sys/UCL-sketch/network) 
 [![](https://img.shields.io/badge/license-Apache-red.svg)](https://github.com/Y-debug-sys/UCL-sketch/blob/master/LICENSE) 
+<a href= "http://arxiv.org/abs/2412.03611"><img src="https://img.shields.io/badge/Paper-arXiv-darkred" /></a>
 <img src="https://img.shields.io/badge/python-3.8-blue">
 <img src="https://img.shields.io/badge/pytorch-2.0-orange">
 
@@ -13,35 +14,35 @@
 </div>
 
 <p align="center">
-<img src='figs/ai-plot.jpg' width='95%' align=center />
+<img src='figs/ucl_logo.png' width='95%' align=center />
 <br>
-<b>Fig. 1:</b> Learning-based Sketches for Frequency Estimation in Data Streams without Ground Truth (from Chat-GPT).
 </p>
 
-> **Learning-based Sketches for Frequency Estimation in Data Streams without Ground Truth**\
-> Authors: [Xinyu Yuan](https://y-debug-sys.github.io/), [Yan Qiao](https://faculty.hfut.edu.cn/qiaoyan/en/index.htm)*, [Meng Li](https://ubiplab.github.io/MengLi_CV.github.io/) et al.\
-> Paper: http://arxiv.org/abs/2412.03611
+> **Authors:** [Xinyu Yuan](https://y-debug-sys.github.io/), [Yan Qiao](https://faculty.hfut.edu.cn/qiaoyan/en/index.htm), [Meng Li](https://ubiplab.github.io/MengLi_CV.github.io/), Zhenchun Wei, Cuiying Feng, [Zonghui Wang](https://person.zju.edu.cn/en/zhwang) & [Wenzhi Chen](http://arc.zju.edu.cn/64010/list.htm)\
+> 🎉 *[The paper](http://arxiv.org/abs/2412.03611) has been accepted by [IEEE Transactions on Knowledge and Data Engineering](https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=69).*
 
-## About
+---
+
+## 📄 About
 This work addresses the challenge of frequency estimation in unending data streams, which is vital across domains such as networking, social media, and finance. Traditional sketch-based approaches, using compact counters and hash functions, are computationally efficient but often sacrifice accuracy. Recent efforts to enhance sketches with deep learning have shown promise in improving performance but face limitations: reliance on labeled data, frequent retraining requirements, and high time and space costs in streaming scenarios. 
 
-To overcomethese limitations, the study introduces **UCL-sketch** (**U**nsupervised **C**ompressive Learning **Sketch**), a novel framework combining the strengths of equation-based and learned sketches. Unlike prior approaches, UCL-sketch is ground-truth-free, relying on self-supervised strategy called equivalent learning using only sketch counters for online training. This enables real-time adaptation to distribution shifts in streaming data. The framework also incorporates logical buckets, allowing scalable and efficient handling of large-scale streams by splitting and learning multiple mappings with shared parameters.
+To overcomethese limitations, the study introduces **UCL-sketch** (**U**nsupervised **C**ompressive **L**earning **Sketch**), a novel framework combining the strengths of equation-based and learned sketches. Unlike prior approaches, UCL-sketch is ground-truth-free, relying on self-supervised strategy called equivalent learning using only sketch counters for online training. This enables real-time adaptation to distribution shifts in streaming data. The framework also incorporates logical buckets, allowing scalable and efficient handling of large-scale streams by splitting and learning multiple mappings with shared parameters.
 
 <p align="center">
 <img src='figs/fig1.jpg' width='100%' align=center />
 <br>
-<b>Fig. 2:</b> Overview of Our Stream Data Sketching Framework.
+<b>Figure:</b> Overview of Our Stream Data Sketching Framework.
 </p>
 
-This repository contains:
+👉 This repository contains:
 
-* 🪐 A simple PyTorch [implementation](https://github.com/Y-debug-sys/UCL-sketch/tree/master/UCL_sketch) of UCL-sketch.
-* ⚡️ Pre-processed 13-byte long 5-tuple network packet data slices.
-* 💥 A self-contained [jupyter notebook](https://github.com/Y-debug-sys/UCL-sketch/blob/master/experiment_demo.ipynb) for running and evaluating all sketching algorithms: *CM-sketch*, *C-sketch*, *Ideally Learned CM-sketch*, *Ideally Learned C-sketch*, *Univmon*, *Elastic Sketch*, *NitroSketch*, *SeqSketch* and our *UCL-sketch* for sure.
-* 🛸 Other useful functions and documents, such as metrics like Weighted Mean
+* A simple PyTorch [implementation](https://github.com/Y-debug-sys/UCL-sketch/tree/master/UCL_sketch) of UCL-sketch.
+* Pre-processed 13-byte long 5-tuple network packet data slices.
+* A self-contained [jupyter notebook](https://github.com/Y-debug-sys/UCL-sketch/blob/master/experiment_demo.ipynb) for running and evaluating all sketching algorithms: *CM-sketch*, *C-sketch*, *Ideally Learned CM-sketch*, *Ideally Learned C-sketch*, *Univmon*, *Elastic Sketch*, *NitroSketch*, *SeqSketch* and our *UCL-sketch* for sure.
+* Other useful functions and documents, such as metrics like Weighted Mean
 Relative Difference (WMRD).
 
-## Setup
+## 📦 Setup
 
 First, download and set up the repo:
 
@@ -57,7 +58,7 @@ conda env create -f environment.yml
 conda activate UCL-sketch
 ```
 
-## Running
+## 🚀 Running
 
 We provide a running script for UCL-sketch in [`main.py`](main.py). This script can be used to train UCL-sketch on the provided IP traces, but it can be easily modified to support other streaming datasets: For both [`Kosarak`]( http://fmi.uantwerpen.be/data/kosarak.dat.gz) and [`Retail`](http://fmi.uantwerpen.be/data/retail.dat.gz), they can be downloaded from http://fmi.uantwerpen.be/data. After downloading, extract the .dat format file into [`data`](data/) directory. Then the usage is given by:
 
@@ -73,11 +74,15 @@ python main.py --config_path ./configs/{your_config_name}.yaml --skewness {your_
 
 Regarding comparisons with baselines and evaluation (AAE, ARE, WMRD etc.), see our [`Jupyter demo`](experiment_demo.ipynb) for details.
 
-## Acknowledgments
+## 🧾 License
+
+This repository is released under the Apache License.
+
+## 🤝 Acknowledgments
 
 The implementation of baselines in this codebase mainly borrows from a C++ repo called [BitSense](https://github.com/N2-Sys/BitSense/tree/main/simulator/src/sketch). We thank the authors for their helpful open-source contributions.
 
-## Citation
+## 📚 Citation
 
 If you use this codebase, or otherwise find our work valuable, please cite UCL-sketch:
 ```
